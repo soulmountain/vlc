@@ -1047,9 +1047,15 @@ static int DecoderPlayVideo( decoder_t *p_dec, picture_t *p_picture,
 
     const bool b_dated = p_picture->date > VLC_TS_INVALID;
     int i_rate = INPUT_RATE_DEFAULT;
+
+    mtime_t date_before = p_picture->date;
     DecoderFixTs( p_dec, &p_picture->date, NULL, NULL,
                   &i_rate, DECODER_BOGUS_VIDEO_DELAY );
 
+    //HarrisonFeng for log
+    msg_Dbg(p_dec, "[DS 04 decoder::DecoderPlayVideo] video date_before[%llu] after DecoderFixTs[%llu]", 
+            date_before, p_picture->date);
+            
     vlc_mutex_unlock( &p_owner->lock );
 
     /* FIXME: The *input* FIFO should not be locked here. This will not work
@@ -1403,6 +1409,16 @@ static void DecoderProcess( decoder_t *p_dec, block_t *p_block )
         {
             /* This block has already been packetized */
             packetize = false;
+        }
+        //HarrisonFeng for log
+        if( p_dec->fmt_out.i_cat == AUDIO_ES )
+        {
+            msg_Dbg(p_dec, "[DS 01 decoder::DecoderProcess] audio pts[%llu]", p_block->i_pts);
+
+        }
+        else if( p_dec->fmt_out.i_cat == VIDEO_ES )
+        {            
+            msg_Dbg(p_dec, "[DS 01 decoder::DecoderProcess] video pts[%llu]", p_block->i_pts);
         }
     }
 

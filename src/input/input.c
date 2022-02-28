@@ -578,6 +578,13 @@ static void MainLoopDemux( input_thread_t *p_input, bool *pb_changed )
 
     i_ret = i_ret > 0 ? VLC_DEMUXER_SUCCESS : ( i_ret < 0 ? VLC_DEMUXER_EGENERIC : VLC_DEMUXER_EOF);
 
+    /* Don't stop video when EOF reached, modified by HarrisonFeng, 2022.2.22 */
+    if( i_ret == VLC_DEMUXER_EOF )
+    {
+        //msg_Dbg( p_input, "EOF reached! Change to success" );
+        //i_ret = VLC_DEMUXER_SUCCESS;
+    }
+
     if( i_ret == VLC_DEMUXER_SUCCESS )
     {
         if( demux_TestAndClearFlags( p_demux, INPUT_UPDATE_TITLE_LIST ) )

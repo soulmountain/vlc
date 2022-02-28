@@ -765,6 +765,9 @@ static void update_late_frame_count( decoder_t *p_dec, block_t *p_block,
                                      mtime_t current_time, mtime_t i_pts,
                                      mtime_t i_next_pts )
 {
+    //Output log: video pts. Added by HarrisonFeng, 2022.2.22
+    msg_Dbg(p_dec, "[Harrison][DS 02 video::update_late_frame_count] video pts[%llu], next_pts[%llu], current_time[%llu]", 
+        i_pts, i_next_pts, current_time);
     decoder_sys_t *p_sys = p_dec->p_sys;
    /* Update frame late count (except when doing preroll) */
    mtime_t i_display_date = VLC_TS_INVALID;
@@ -772,6 +775,9 @@ static void update_late_frame_count( decoder_t *p_dec, block_t *p_block,
        i_display_date = decoder_GetDisplayDate( p_dec, i_pts );
 
    mtime_t i_threshold = i_next_pts != VLC_TS_INVALID ? (i_next_pts - i_pts) / 2 : 20000;
+    //Output log: video pts. Added by HarrisonFeng, 2022.2.22
+    msg_Dbg(p_dec, "[Harrison][DS 02 video::update_late_frame_count] video display_date[%llu], threshold[%llu], current_time[%llu]", 
+        i_display_date, i_threshold, current_time);
 
    if( i_display_date > VLC_TS_INVALID && i_display_date + i_threshold <= current_time )
    {
@@ -1068,6 +1074,11 @@ static picture_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block, bool *error
         }
 
         ret = avcodec_receive_frame(p_context, frame);
+        //Output log: video pts. Added by HarrisonFeng, 2022.2.22
+        msg_Dbg(p_dec, "[Harrison][DS 02 video::DecodeBlock] step 1: video frame receive, key_frame[%d], pts[%llu], pkt_pts[%llu], pkt_dts[%llu], coded_picture_number[%d], best_effort_timestamp[%llu], pkt_pos[%llu], pkt_duration[%llu], ret[%d]", 
+            frame->key_frame, frame->pts, frame->pkt_pts, frame->pkt_dts,frame->coded_picture_number, 
+            frame->best_effort_timestamp, frame->pkt_pos, frame->pkt_duration, ret);
+
         if( ret != 0 && ret != AVERROR(EAGAIN) )
         {
             if (ret == AVERROR(ENOMEM) || ret == AVERROR(EINVAL))
@@ -1093,6 +1104,8 @@ static picture_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block, bool *error
 
         if( p_block )
         {
+            //Output log: video pts. Added by HarrisonFeng, 2022.2.22
+            msg_Dbg(p_dec, "[Harrison][DS 02 video::DecodeBlock] step 2: video pts[%llu]", p_block->i_pts);
             if( p_block->i_buffer <= 0 )
                 eos_spotted = false;
 
@@ -1110,6 +1123,14 @@ static picture_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block, bool *error
         }
 
         /* Compute the PTS */
+        //Output log: video pts. Added by HarrisonFeng, 2022.2.22
+        msg_Dbg(p_dec, "[Harrison][DS 02 video::DecodeBlock] step 3: video frame key_frame[%d], pts[%llu], pkt_pts[%llu], pkt_dts[%llu], coded_picture_number[%d], best_effort_timestamp[%llu], pkt_pos[%llu], pkt_duration[%llu]", 
+            frame->key_frame, frame->pts, frame->pkt_pts, frame->pkt_dts,frame->coded_picture_number, 
+            frame->best_effort_timestamp, frame->pkt_pos, frame->pkt_duration);
+
+        msg_Dbg(p_dec, "[Harrison][video_frame_timestamp]:%llu", 
+            frame->best_effort_timestamp);
+
 #ifdef FF_API_PKT_PTS
         mtime_t i_pts = frame->pts;
 #else
