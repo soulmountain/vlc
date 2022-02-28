@@ -1174,7 +1174,16 @@ static int ThreadDisplayRenderPicture(vout_thread_t *vout, bool is_forced)
         mwait(todisplay->date);
 
     /* Display the direct buffer returned by vout_RenderPicture */
+    msg_Dbg(vout, "[Harrison][DS 05 ThreadDisplayRenderPicture] video displayed date[%llu] timestamp[%llu], todisplaye date[%llu] frame_timestamp[%llu] before reset", 
+            vout->p->displayed.date, vout->p->displayed.timestamp, todisplay->date, todisplay->frame_best_effort_timestamp);
+
     vout->p->displayed.date = mdate();
+
+    msg_Dbg(vout, "[Harrison][DS 05 ThreadDisplayRenderPicture] video displayed date[%llu] timestamp[%llu], todisplaye date[%llu] frame_timestamp[%llu] after reset", 
+            vout->p->displayed.date, vout->p->displayed.timestamp, todisplay->date, todisplay->frame_best_effort_timestamp);
+    msg_Dbg(vout, "[Harrison][video_todisplay_frame_timestamp]:%llu", 
+            todisplay->frame_best_effort_timestamp);
+
     vout_display_Display(vd, todisplay, subpic);
 
     vout_statistic_AddDisplayed(&vout->p->statistic, 1);

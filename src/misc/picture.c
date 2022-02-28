@@ -130,6 +130,7 @@ void picture_Reset( picture_t *p_picture )
 {
     /* */
     p_picture->date = VLC_TS_INVALID;
+    p_picture->frame_best_effort_timestamp = VLC_TS_INVALID; //Added by HarrisonFeng, 2022.2.28
     p_picture->b_force = false;
     p_picture->b_progressive = false;
     p_picture->i_nb_fields = 2;
@@ -358,6 +359,7 @@ void plane_CopyPixels( plane_t *p_dst, const plane_t *p_src )
 void picture_CopyProperties( picture_t *p_dst, const picture_t *p_src )
 {
     p_dst->date = p_src->date;
+    p_dst->frame_best_effort_timestamp = p_src->frame_best_effort_timestamp; //Added by HarrisonFeng, 2022.2.28
     p_dst->b_force = p_src->b_force;
 
     p_dst->b_progressive = p_src->b_progressive;

@@ -1128,7 +1128,7 @@ static picture_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block, bool *error
             frame->key_frame, frame->pts, frame->pkt_pts, frame->pkt_dts,frame->coded_picture_number, 
             frame->best_effort_timestamp, frame->pkt_pos, frame->pkt_duration);
 
-        msg_Dbg(p_dec, "[Harrison][video_frame_timestamp]:%llu", 
+        msg_Dbg(p_dec, "[Harrison][video_decode_frame_timestamp]:%llu", 
             frame->best_effort_timestamp);
 
 #ifdef FF_API_PKT_PTS
@@ -1249,7 +1249,11 @@ static picture_t *DecodeBlock( decoder_t *p_dec, block_t **pp_block, bool *error
         p_pic->i_nb_fields = 2 + frame->repeat_pict;
         p_pic->b_progressive = !frame->interlaced_frame;
         p_pic->b_top_field_first = frame->top_field_first;
-
+        //set frame timestamp for pictures to display, added by HarrisonFeng, 2022.2.28
+        p_pic->frame_best_effort_timestamp = frame->best_effort_timestamp;
+        msg_Dbg(p_dec, "[Harrison][DS 02 video::DecodeBlock] step 4: set frame_best_effort_timestamp[%llu] for pictures to display", 
+            p_pic->frame_best_effort_timestamp);
+            
         if (DecodeSidedata(p_dec, frame, p_pic))
             i_pts = VLC_TS_INVALID;
 

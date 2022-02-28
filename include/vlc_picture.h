@@ -80,6 +80,7 @@ struct picture_t
      * but should never be written directly */
     /**@{*/
     mtime_t         date;                                  /**< display date */
+    int64_t         frame_best_effort_timestamp;           /**< frame timestamp, added by HarrisonFeng, 2022.2.28 */
     bool            b_force;
     /**@}*/
 
