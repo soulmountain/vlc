@@ -1053,7 +1053,7 @@ static int DecoderPlayVideo( decoder_t *p_dec, picture_t *p_picture,
                   &i_rate, DECODER_BOGUS_VIDEO_DELAY );
 
     //HarrisonFeng for log
-    msg_Dbg(p_dec, "[DS 04 decoder::DecoderPlayVideo] video date_before[%llu] after DecoderFixTs[%llu]", 
+    msg_Dbg(p_dec, "[Harrison][DS 04 decoder::DecoderPlayVideo] video date before[%llu] after DecoderFixTs[%llu]", 
             date_before, p_picture->date);
             
     vlc_mutex_unlock( &p_owner->lock );
@@ -1413,12 +1413,12 @@ static void DecoderProcess( decoder_t *p_dec, block_t *p_block )
         //HarrisonFeng for log
         if( p_dec->fmt_out.i_cat == AUDIO_ES )
         {
-            msg_Dbg(p_dec, "[DS 01 decoder::DecoderProcess] audio pts[%llu]", p_block->i_pts);
+            msg_Dbg(p_dec, "[Harrison][DS 01 decoder::DecoderProcess] audio pts[%llu]", p_block->i_pts);
 
         }
         else if( p_dec->fmt_out.i_cat == VIDEO_ES )
         {            
-            msg_Dbg(p_dec, "[DS 01 decoder::DecoderProcess] video pts[%llu]", p_block->i_pts);
+            msg_Dbg(p_dec, "[Harrison][DS 01 decoder::DecoderProcess] video pts[%llu]", p_block->i_pts);
         }
     }
 
