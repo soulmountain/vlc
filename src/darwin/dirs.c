@@ -83,7 +83,8 @@ char *config_GetLibDir (void)
     if (dladdr(system_Init, &info)) {
         char *incompletepath = strdup(dirname( (char *)info.dli_fname ));
         char *path = NULL;
-        asprintf(&path, "%s/"PACKAGE, incompletepath);
+        //asprintf(&path, "%s/"PACKAGE, incompletepath);
+        asprintf(&path, "%s", incompletepath);
         free(incompletepath);
         return path;
     }
