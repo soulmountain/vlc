@@ -467,7 +467,6 @@ static int OpenVideoCodec( decoder_t *p_dec )
 int InitVideoDec( vlc_object_t *obj )
 {
     decoder_t *p_dec = (decoder_t *)obj;
-    msg_Dbg(p_dec, "[vathena][DS 00 InitVideoDec start】");
     const AVCodec *p_codec;
     AVCodecContext *p_context = ffmpeg_AllocContext( p_dec, &p_codec );
     if( p_context == NULL )
@@ -639,7 +638,6 @@ int InitVideoDec( vlc_object_t *obj )
 
     p_dec->pf_decode = DecodeVideo;
     p_dec->pf_flush  = Flush;
-    msg_Dbg(p_dec, "[vathena][DS 00 InitVideoDec]: video pts[%x]", p_dec->pf_decode);
 
     /* XXX: Writing input format makes little sense. */
     if( p_context->profile != FF_PROFILE_UNKNOWN )
@@ -1286,7 +1284,6 @@ static int DecodeVideo( decoder_t *p_dec, block_t *p_block )
     block_t **pp_block = p_block ? &p_block : NULL;
     picture_t *p_pic;
     bool error = false;
-    msg_Dbg(p_dec, "[vathena][DS 01 video::DecodeVideo]: video pts[%llu]", p_block->i_pts);
     while( ( p_pic = DecodeBlock( p_dec, pp_block, &error ) ) != NULL )
         decoder_QueueVideo( p_dec, p_pic );
     return error ? VLCDEC_ECRITICAL : VLCDEC_SUCCESS;
